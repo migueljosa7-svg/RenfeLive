@@ -6,5 +6,5 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://renfelive.vercel.app"
+  process.env.NEXT_PUBLIC_SITE_URL || "https://renfe-live.vercel.app"
 ).replace(/\/$/, "");
