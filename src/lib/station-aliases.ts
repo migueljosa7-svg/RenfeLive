@@ -1,0 +1,20 @@
+/** Slugs alternativos frecuentes -> slug canónico de la estación. Sin imports (lo usa next.config.ts). */
+export const STATION_ALIASES: Record<string, string> = {
+  "madrid-atocha": "atocha-cercanias",
+  atocha: "atocha-cercanias",
+  "madrid-atocha-cercanias": "atocha-cercanias",
+  "madrid-chamartin": "chamartin",
+  "chamartin-clara-campoamor": "chamartin",
+  "madrid-sol": "sol",
+  "madrid-principe-pio": "principe-pio",
+  "madrid-nuevos-ministerios": "nuevos-ministerios",
+  "madrid-aeropuerto-t4": "aeropuerto-t4",
+  "sants": "barcelona-sants",
+  "barcelona-passeig-de-gracia": "passeig-de-gracia",
+  "valencia-estacion-del-norte": "valencia-nord",
+  "valencia-joaquin-sorolla-ave": "valencia-joaquin-sorolla",
+  "sevilla-santa-justa-ave": "sevilla-santa-justa",
+  "malaga-maria-zambrano-ave": "malaga-maria-zambrano",
+  "zaragoza": "zaragoza-delicias",
+  "bilbao": "bilbao-abando",
+};
