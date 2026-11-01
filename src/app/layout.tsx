@@ -27,6 +27,9 @@ export const metadata: Metadata = {
     description: "Retrasos e incidencias de Cercanías, AVE y Metro en tiempo real.",
   },
   twitter: { card: "summary_large_image" },
+  verification: {
+    google: "8pD-WHdPGed-RtgDkXZTN0LE3UUMLYH9LFPUoxspwCU",
+  },
 };
 
 export const viewport: Viewport = {
