@@ -16,6 +16,7 @@ import {
   stationPath,
 } from "@/lib/transit-data";
 import { SITE_URL } from "@/lib/utils";
+import { buildMetadata, jsonLdString } from "@/lib/seo";
 
 export const revalidate = 60;
 export const dynamicParams = false;
@@ -32,14 +33,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const community = getCommunity(comunidad);
   if (!line || !community) return {};
   const status = getLineStatus(line);
-  const title = `${line.name}: estado e incidencias hoy (${community.name})`;
-  const description = `${KIND_LABEL[line.kind]} ${line.label} ${community.name}: ${STATUS_META[status.level].label.toLowerCase()}. Retrasos, incidencias en directo y rutas alternativas.`;
-  return {
-    title,
-    description,
-    alternates: { canonical: `/incidencias/${comunidad}/${linea}` },
-    openGraph: { title, description, type: "article" },
-  };
+  const title = `Estado y Retrasos Renfe en ${line.name} hoy en directo`;
+  const description = `${KIND_LABEL[line.kind]} ${line.label} ${community.name}: ${STATUS_META[status.level].label.toLowerCase()}. Retrasos, averías e incidencias en directo y rutas alternativas.`;
+  return buildMetadata({ title, description, path: `/incidencias/${comunidad}/${linea}` });
 }
 
 export default async function LinePage({ params }: { params: Params }) {
@@ -53,21 +49,55 @@ export default async function LinePage({ params }: { params: Params }) {
   const analysis = analyzeLine(line, status);
   const alternatives = getAlternatives(line);
 
-  const jsonLd = {
+  const pageUrl = `${SITE_URL}/incidencias/${comunidad}/${linea}`;
+  const breadcrumb = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Inicio", item: SITE_URL },
       { "@type": "ListItem", position: 2, name: community.name, item: `${SITE_URL}/incidencias/${community.slug}` },
-      { "@type": "ListItem", position: 3, name: line.name, item: `${SITE_URL}/incidencias/${comunidad}/${linea}` },
+      { "@type": "ListItem", position: 3, name: line.name, item: pageUrl },
     ],
   };
+  // Con incidencia activa: LiveBlogPosting; en normalidad: Service.
+  const main =
+    status.level === "ok"
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Service",
+          name: `Servicio ${line.name}`,
+          serviceType: KIND_LABEL[line.kind],
+          areaServed: community.name,
+          description: analysis.headline,
+          url: pageUrl,
+        }
+      : {
+          "@context": "https://schema.org",
+          "@type": "LiveBlogPosting",
+          headline: analysis.headline,
+          url: pageUrl,
+          inLanguage: "es-ES",
+          datePublished: status.updatedAt,
+          dateModified: new Date().toISOString(),
+          coverageStartTime: status.updatedAt,
+          about: { "@type": "Service", name: line.name, areaServed: community.name },
+          publisher: { "@type": "Organization", name: "renfe-live", url: SITE_URL },
+          liveBlogUpdate: [
+            {
+              "@type": "BlogPosting",
+              headline: status.message,
+              datePublished: status.updatedAt,
+              articleBody: analysis.paragraphs.join(" "),
+            },
+          ],
+        };
+  const jsonLd = [breadcrumb, main];
 
   return (
     <article className="space-y-8">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
       />
       <nav aria-label="Migas de pan" className="text-sm text-slate-400">
         <Link href="/" className="hover:text-white">Inicio</Link> ›{" "}

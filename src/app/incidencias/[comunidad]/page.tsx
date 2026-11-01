@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import IncidenceCard from "@/components/ui/IncidenceCard";
 import AdSlot from "@/components/ui/AdSlot";
 import { getLineStatus } from "@/lib/status";
+import { buildMetadata } from "@/lib/seo";
 import { COMMUNITIES, getCommunity, getLinesByCommunity } from "@/lib/transit-data";
 
 export const revalidate = 60;
@@ -18,12 +19,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { comunidad } = await params;
   const c = getCommunity(comunidad);
   if (!c) return {};
-  const title = `Incidencias y retrasos hoy en ${c.name}`;
-  return {
-    title,
+  return buildMetadata({
+    title: `Retrasos y averías Renfe en ${c.name} hoy en directo`,
     description: `${c.description}: estado en tiempo real de todas las líneas, retrasos e incidencias.`,
-    alternates: { canonical: `/incidencias/${comunidad}` },
-  };
+    path: `/incidencias/${comunidad}`,
+  });
 }
 
 export default async function CommunityPage({ params }: { params: Params }) {

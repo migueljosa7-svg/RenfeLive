@@ -9,13 +9,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...COMMUNITIES.map((c) => ({
       url: `${SITE_URL}/incidencias/${c.slug}`,
       lastModified: now,
-      changeFrequency: "always" as const,
+      changeFrequency: "hourly" as const,
       priority: 0.9,
     })),
     ...LINES.map((l) => ({
       url: `${SITE_URL}${linePath(l)}`,
       lastModified: now,
-      changeFrequency: "always" as const,
+      changeFrequency: "hourly" as const,
       priority: 0.8,
     })),
     ...STATIONS.map((s) => ({

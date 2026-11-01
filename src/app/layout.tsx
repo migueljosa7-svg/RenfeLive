@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: "RenfeLive · Estado de Cercanías, AVE y Metro en tiempo real",
-    template: "%s | RenfeLive",
+    template: "%s | renfe-live",
   },
   description:
     "Consulta en directo retrasos, incidencias y rutas alternativas de Cercanías Madrid, Barcelona, Valencia, AVE, Ouigo, Iryo y Metro.",
@@ -26,7 +26,11 @@ export const metadata: Metadata = {
     title: "RenfeLive · Estado del transporte público en España",
     description: "Retrasos e incidencias de Cercanías, AVE y Metro en tiempo real.",
   },
-  twitter: { card: "summary_large_image" },
+  twitter: {
+    card: "summary_large_image",
+    title: "renfe-live · Estado del transporte público en España",
+    description: "Retrasos e incidencias de Cercanías, AVE y Metro en tiempo real.",
+  },
   verification: {
     google: "8pD-WHdPGed-RtgDkXZTN0LE3UUMLYH9LFPUoxspwCU",
   },
